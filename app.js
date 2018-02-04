@@ -22,6 +22,9 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.use(bodyParser.json());
 
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
 app.use('/users',users);
 app.get('/',(req,res,send)=>{
  res.send('Invalid Enpoints');
