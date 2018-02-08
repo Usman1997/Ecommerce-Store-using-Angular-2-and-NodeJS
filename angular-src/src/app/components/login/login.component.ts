@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
+import {AuthGuard} from '../../guard/auth.guard';
 
 @Component({
   selector: 'app-login',
@@ -10,13 +11,19 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit {
  username:String;
  password:String;
+ previousUrl;
   constructor(
 
     private authService :AuthService,
     private router:Router,
+    private authGuard:AuthGuard,
   ) { }
 
   ngOnInit() {
+       if(this.authGuard.redirectUrl){
+         this.previousUrl = this.authGuard.redirectUrl;
+         this.authGuard.redirectUrl = undefined;
+       }
   }
 
    onLoginSubmit(){
@@ -29,7 +36,15 @@ export class LoginComponent implements OnInit {
         if(data.success){
           console.log('You are now logged in');
           this.authService.StoreUser(data.token,data.user);
-          this.router.navigate(['/profile']);
+          if(this.previousUrl){
+          
+            this.router.navigate([this.previousUrl]);
+            this.previousUrl = undefined;
+          }
+          else{
+            this.router.navigate(['/profile']);
+          }
+         
 
         }
         else{

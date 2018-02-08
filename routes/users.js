@@ -4,6 +4,7 @@ const User  = require('../models/user');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config =require('../config/database');
+const Product = require('../models/products');
 router.post('/register',(req,res,next)=>{
     let newUser = new User({
 
@@ -65,9 +66,23 @@ router.get('/profile',passport.authenticate('jwt',{session:false}),(req,res,next
           res.json({user:req.user});
 });
 
-router.get('/validate',(req,res,next)=>{
+router.get('/getProducts',(req,res,next)=>{
 
-res.send('validate');
-});
+    Product.find({},(err,products)=>{
+   
+    if(err){
+     res.json({success:false,msg:err});
+    }
+    else if(!products){
+     res.json({success:false,msg:'No Products'});
+   
+    }else{
+     res.json({success:true,products:products});
+    }
+   
+    }).sort({'_id':-1});
+   
+   });
+   
 
 module.exports = router;

@@ -7,6 +7,7 @@ import {ValidateService} from './services/validate.service';
 import {AuthService} from './services/auth.service';
 import {AuthGuard} from './guard/auth.guard';
 import {NoAuthGuard} from './guard/noAuth.guard';
+import {ProductService} from './services/product.service';
 
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -42,7 +43,7 @@ const appRoutes:Routes =[
     RouterModule.forRoot(appRoutes),
    
   ],
-  providers: [ValidateService,AuthService,AuthGuard,NoAuthGuard],
+  providers: [ValidateService,AuthService,AuthGuard,NoAuthGuard,ProductService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
