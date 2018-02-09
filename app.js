@@ -5,7 +5,12 @@ var cors = require('cors');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var config = require('./config/database');
-mongoose.connect(config.database);
+var session = require('express-session');
+var MonogoStore = require('connect-mongo')(session);
+
+// mongoose.connect(config.database);
+mongoose.connect('localhost:27017/MeanShoppingApp');
+
 mongoose.connection.on('connected',()=>{
 console.log('Connected to '+config.database);
 });
@@ -14,6 +19,15 @@ console.log('Not Connected');
 });
 const app = express();
 
+app.use(session({
+store : new MonogoStore({mongooseConection:mongoose.connection}),
+cookie :{maxAge:180*60*1000}
+}));
+app.use(function(req,res,next){
+
+res.locals.session = req.session;
+next();
+});
 const users = require('./routes/users');
 const port = 3000;
 app.use(cors());

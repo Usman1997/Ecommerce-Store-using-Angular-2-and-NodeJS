@@ -83,6 +83,21 @@ router.get('/getProducts',(req,res,next)=>{
     }).sort({'_id':-1});
    
    });
+
+   router.get('/add-to-cart/:id',function(req,res,next){
+   
+      var ProductId = req.params.id;
+      var cart = new cart(req.session.cart ? req.session.cart : {});
+      Product.findById(ProductId,function(err,product){
+                 if(err){
+                     res.json({success:false,msg:err});
+                 }
+                 cart.add(product,product.id);
+                 req.session.cart = cart;
+                 console.log(req.session.cart);
+      });
+
+   });
    
 
 module.exports = router;
